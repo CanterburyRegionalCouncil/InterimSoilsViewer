@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Ecan Soil Map *DRAFT</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  
+	#viewDiv {
+		float: left;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		min-height: 100%;
+		background: #222;
+		display: block;
+		position: absolute;
+		color: #9d9d9d;
+		padding-left: 350px;
+		padding-right: 350px;
+	}
+	.container {
+		color: #9d9d9d;
+		background: #222;
+	}
+
+	html, body {
+		height: 100%;
+		background: #222;
+	}
+	.fill {
+		min-height: 100%;
+		height: 100%
+		}
+	.toc {
+		width: 20%; 
+		float: right; 
+		position: absolute; 
+		right: 0px;
+		background: #222;
+		height: 100%;
+		min-height: 100%;
+		padding: 5px;
+		color: #9d9d9d;
+	}
+	a {
+		color: white;
+	}
+	.overlay {
+		height: 100%;
+		width: 0;
+		position: fixed;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		background-color: rgb(0,0,0);
+		background-color: rgba(0,0,0, 0.9);
+		overflow-x: hidden;
+		transition: 0.5s;
+	}
+	.overlay-content {
+		position: relative;
+		top: 25%;
+		width: 100%;
+		text-align: center;
+		margin-top: 30px;
+	}
+
+	.overlay a {
+		padding: 8px;
+		text-decoration: none;
+		font-size: 36px;
+		color: #818181;
+		display: block;
+		transition: 0.3s;
+	}
+
+	.overlay a:hover, .overlay a:focus {
+		color: #f1f1f1;
+	}
+
+	.overlay .closebtn {
+		position: absolute;
+		top: 20px;
+		right: 45px;
+		font-size: 60px;
+	}
+
+	@media screen and (max-height: 450px) {
+	  .overlay a {font-size: 20px}
+	  .overlay .closebtn {
+		font-size: 40px;
+		top: 15px;
+		right: 35px;
+	  }
+	}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse" style="margin-bottom: 0px; border-radius: 0px;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="index.html">Interim Canterbury Soil Layer</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</span></a>
+      <li class="active"><a href="provenance.html">Provenance</a></li>
+      <li><a href="tos.html">Terms of Use</a></li>
+      <!--<li style="cursor:pointer" onclick="openNav()"><a href="#">Help</a></li>-->
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="https://www.ecan.govt.nz/">Environment Canterbury</a></li>
+      <!-- <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> -->
+    </ul>
+  </div>
+</nav>
+<div id="myNav" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
+</div> 
+<div class="container">
+	<p>
+	<h3>Provenance</h3>
+	<p>The interim soil layer data was last updated May, 2017.</p>
+	<p>Landcare Research (LCR) created an interim soil layer by filling the gaps in the S‑map coverage with polygons from the Land Resource Inventory (LRI). A number of steps were carried out to improve the accuracy of the LRI data, and to establish a link to S‑map.</p>
+	<ul class="simple-list">
+		<li>Major errors in the spatial registration or soil and landform identification were identified using 1:50,000 topographic maps, aerial photographs, Digital Elevation Model, and geological maps.</li>
+		<li>Very small (area < 5 m2) and isolated map units were merged or removed.</li>
+		<li>Soil polygon boundaries were corrected where aerial photos and topographic maps showed a poor spatial match with landscape units.</li>
+		<li>LRI identification of moraines, soils from sandstone, siltstone and limestone, and soils with loess mantles was improved using the geomorphic map of Barrell et al. (2011) and the recent geological mapping of Canterbury (QMAP, GNS 2015).</li>
+		<li>Polygons were linked to representative S‑map siblings. The correlation with S‑map siblings has been done on the basis of similar functionality with respect to nutrient losses, which may make this layer unsuitable for other purposes.</li>
+	</ul>
+	</p>
+	</div>
+</div>
+<script>
+function openNav() {
+    document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+    document.getElementById("myNav").style.width = "0%";
+}
+</script>
+
+</body>
+</html>

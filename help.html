@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Ecan Soil Map *DRAFT</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  
+	#viewDiv {
+		float: left;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		min-height: 100%;
+		background: #222;
+		display: block;
+		position: absolute;
+		color: #9d9d9d;
+		padding-left: 350px;
+		padding-right: 350px;
+	}
+	.container {
+		color: #9d9d9d;
+		background: #222;
+	}
+
+	html, body {
+		height: 100%;
+		background: #222;
+	}
+	.fill {
+		min-height: 100%;
+		height: 100%
+		}
+	.toc {
+		width: 20%; 
+		float: right; 
+		position: absolute; 
+		right: 0px;
+		background: #222;
+		height: 100%;
+		min-height: 100%;
+		padding: 5px;
+		color: #9d9d9d;
+	}
+	a {
+		color: white;
+	}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse" style="margin-bottom: 0px; border-radius: 0px;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="index.html">Canterbury Soils</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="index.html">Home</a></li>
+      <li class="active"><a href="#">About</span></a>
+      <li><a href="provenance.html">Provenance</a></li>
+      <li><a href="tos.html">Terms of Use</a></li>
+      <li><a href="help.html">Help</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#">Environment Canterbury</a></li>
+      <!-- <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> -->
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+	<p>
+	<h3>Background</h3>
+	<p>This site was created by Landcare Research (LCR) under contract from Environment Canterbury. It provides access to a single soil layer, containing soil mapping for the parts of Canterbury that do not have S‑map data and are not part of the Department of Conservation estate.</p>
+	<p>The requirement for this dataset, and the development of this site to house it, came via the "Matrix for Good Management" (MGM) project. MGM is a major collaborative effort to define practical good management practices (GMPs) to minimise nitrogen and phosphorus losses from agricultural land, and to quantify these losses from farms operating at GMP across Canterbury’s soils and climates.</p>
+	<p>Use of the MGM table for catchment accounting and consenting purposes requires compatible soil information across the region. S‑map (Lilburne et al. 2012), and its web counterpart, <a href="https://smap.landcareresearch.co.nz/">S‑map Online</a>, provide soil information for most of the flatter parts of Canterbury, but detailed soil mapping has not yet been completed for the hill and high country. Completion of these areas is likely to be several years away, depending on funding. To bridge this gap, LCR was contracted by Environment Canterbury to create an interim soil layer by filling the gaps in the S‑map coverage with polygons from the Land Resource Inventory (LRI), and linking the polygons to representative S‑map siblings. In addition, improvements have been made to the spatial and attributional accuracy of this interim layer using topographic and geological maps, aerial photographs, and a digital elevation model. Further detail of the methods used can be found on the <a href="provenance.html">Provenance</a> page.</p>
+	<p>The resulting layer can be viewed and interrogated in the <a href="index.html">Home</a> section of this site.</p>
+	<h3>Known Problems</h3>
+	<ul class="simple-list">
+		<li>Requests for soil data for mountain tops incorrectly reports the existence of siblings. This is an error and the factsheets you download will contain no data.</li>
+		<li>The site doesn't present well in landscape view on mobile devices. We are working to provide a fix, but in the meantime, try portrait view or visit the site on a larger device.</li>
+		<li>Various button interaction issues exist when viewing site on touch-screen devices.</li>
+	</ul>
+	</p>
+	</div>
+</div>
+
+
+</body>
+</html>

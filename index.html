@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Ecan Soil Map</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    
+	#viewDiv {
+		float: left;
+		left: 0px;
+		width: 80%;
+		height: 100%;
+		min-height: 100%;
+		background: #333;
+		display: block;
+		position: absolute;
+	}
+	html, body {
+		height: 100%;
+	}
+	.fill {
+		min-height: 100%;
+		height: 100%
+		}
+	.toc {
+		width: 20%; 
+		float: right; 
+		position: absolute; 
+		right: 0px;
+		background: #222;
+		height: 100%;
+		min-height: 100%;
+		padding: 5px;
+		color: #9d9d9d
+	}
+	#Legend_div {
+		background: #86634D;
+		padding: 5px;
+		color: black;
+	}
+	.overlay {
+		height: 100%;
+		width: 0;
+		position: fixed;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		background-color: rgb(0,0,0);
+		background-color: rgba(0,0,0, 0.9);
+		overflow-x: hidden;
+		transition: 0.5s;
+	}
+	.overlay-content {
+		position: relative;
+		top: 25%;
+		width: 100%;
+		text-align: center;
+		margin-top: 30px;
+	}
+	.overlay a {
+		padding: 8px;
+		text-decoration: none;
+		font-size: 36px;
+		color: #818181;
+		display: block;
+		transition: 0.3s;
+	}
+	.overlay a:hover, .overlay a:focus {
+		color: #f1f1f1;
+	}
+	.overlay .closebtn {
+		position: absolute;
+		top: 20px;
+		right: 45px;
+		font-size: 60px;
+	}
+	@media screen and (max-height: 450px) {
+	  .overlay a {font-size: 20px}
+	  .overlay .closebtn {
+		font-size: 40px;
+		top: 15px;
+		right: 35px;
+	  }
+	}
+	.esri-view-root {
+		height: 100%;
+	}
+	.esri-popup__main-container {
+		outline: none;
+		pointer-events: auto;
+		position: relative;
+		z-index: 1;
+		width: 250px;
+		max-height: 300px;
+		background-color: #222;
+		display: flex;
+		flex-flow: column nowrap;
+		color: #9d9d9d;
+	}
+	.esri-popup--is-docked-top-left .esri-popup__main-container, .esri-popup--is-docked-top-right .esri-popup__main-container, .esri-popup--is-docked-bottom-left .esri-popup__main-container, .esri-popup--is-docked-bottom-right .esri-popup__main-container {
+		max-height: 80%;
+		background: #222;
+		color: #9d9d9d;
+	}
+	.esri-widget {
+		box-sizing: border-box;
+		color: #9d9d9d;
+		font-size: 14px;
+		font-family: "Avenir Next W00","Helvetica Neue",Helvetica,Arial,sans-serif;
+		line-height: 1.3em;
+		background-color: #222;
+	}
+	.esri-widget, table,th,td {
+		color: #9d9d9d;
+	}
+	a {
+		color: white;
+	}
+	.esri-search {
+		position: absolute;
+		left: 40px;
+	}
+	
+</style>
+<link rel="stylesheet" href="https://js.arcgis.com/4.6/dijit/themes/claro/claro.css">
+<link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+<script src="https://js.arcgis.com/4.6/"></script>
+  <script>
+	require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/WebMap",
+        "esri/layers/GraphicsLayer",
+        "esri/tasks/QueryTask",
+        "esri/tasks/support/Query",
+        "esri/tasks/support/StatisticDefinition",
+		"esri/widgets/Search",
+		"esri/config",
+		      "dojo/_base/array",
+        "dojo/dom",
+		"dojo/on",
+
+        "dojo/domReady!"
+	  
+      
+      ],
+      function(
+        Map, MapView, FeatureLayer, WebMap, GraphicsLayer, QueryTask,
+        Query, StatisticDefinition, Search, esriConfig, arrayUtils, dom, on
+      ) {
+		
+        var querySoilsTask = new QueryTask({
+            url: "https://gis.ecan.govt.nz/arcgis/rest/services/Public/MGM_Datasets/MapServer/10"
+          });
+
+        var querySoils = new Query({
+            spatialRelationship: "intersects", 
+            outFields: ["*"],
+            returnGeometry: true,
+            where: "DataSource IN ('LRI') And SMU <> 'LakeFill'"
+          });
+		
+        var soilpopupTemplate = { // autocasts as new PopupTemplate()
+            title: "{LongSoilName} ({SiblingProportion}% of the map unit polygon)",
+            content: 
+              "<p>Proportion of polygon: {SiblingProportion} % </p>" +
+              "<p>S-map reference:<span style=mso-spacerun:yes>  </span>{SmapName} <a href={LINK} target=_blank>link</a></p>" +
+              "<p>NZ Soil Classification:<span style=mso-spacerun:yes> </span>{NZSCDescription}</p>" +
+              "<p>Topography: {Topography}</p>"+
+              "<p>MGM Nitrogen category: {EcanNLossMGMCategory}</p>"+
+              "<p>MGM Phosphorus category: {EcanPLossMGMCategory}</p>" +
+              "<p>Factsheet from Landcare: <a href={LINK} target=_blank>link</a></p>"
+          };
+
+
+        // this graphiclayer will be used to highlight the shape that was clicked.
+        var graphicsLayer = new GraphicsLayer();
+        var selectionSymbol = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          style: "none",
+          outline: { // autocasts as new SimpleLineSymbol()
+            color: "#00FFFF",
+            width: 3
+          }
+        };
+		
+		//esriConfig.portalUrl = "https://mapportal.ecan.govt.nz/arcgis" //portal
+		var map = new WebMap({
+        portalItem: { 
+          //id: "6f5ea6ffd2e94502adb02177c28e2b35" //portal
+		  id: "217f57b8c74a4f88849488ed1a019a0f"
+        },
+		layers: [graphicsLayer]
+		});
+		
+        // Create the MapView
+		var view = new MapView({
+        map: map,
+		popup: {
+          dockEnabled: true,
+          dockOptions: {
+            // Disables the dock button from the popup
+            buttonEnabled: false,
+            // Ignore the default sizes that trigger responsive docking
+            breakpoint: false,
+          }
+        },
+        container: "viewDiv"
+      });
+
+	  var searchWidget = new Search({
+        view: view
+      });
+
+	  // Add the search widget to the top left corner of the view
+      view.ui.add(searchWidget, {
+        position: "top-left"
+      });
+
+      view.when(function(){
+        on(view, "click", executeSoilQueryTask);
+      });
+
+      function executeSoilQueryTask(event) {
+         // overwrite default click-for-popup
+         // behaviour to display your own popup
+         // event.stopPropagation();
+        // remove 
+        graphicsLayer.removeAll();
+        querySoils.geometry = event.mapPoint;
+        querySoilsTask.execute(querySoils).then(function(response){
+            // Loop through each of the results and
+            // assign a symbol and PopupTemplate
+            // to each so they may be visualized on the map
+            var res_len = response.length;
+            // bad style, but can't be arsed 
+            var extent = response.features[0].geometry.clone().extent
+            var soilResults = arrayUtils.map(response.features, function(
+                  feature) {    
+                  feature.symbol = selectionSymbol;
+                  feature.popupTemplate = soilpopupTemplate;
+                  extent = feature.geometry.clone().extent.union(extent);
+                  return feature;
+            });
+
+            graphicsLayer.addMany(soilResults);
+          // go to grahics layers
+          view.goTo({
+            target: extent.extent.expand(3)
+          });
+          // do the pop-up
+          view.popup.open({
+              features: soilResults
+            });
+        }).catch(promiseRejected);
+          };
+     function promiseRejected(err) {
+        console.error("Promise rejected: ", err.message);
+      }
+      });
+  </script>
+   
+</head>
+<body>
+
+<nav class="navbar navbar-inverse" style="margin-bottom: 0px; border-radius: 0px;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Interim Canterbury Soil Layer</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="about.html">About</span></a>
+      <li><a href="provenance.html">Provenance</a></li>
+      <li><a href="tos.html">Terms of Use</a></li>
+      <!--<li style="cursor:pointer" onclick="openNav()"><a href="#">Help</a></li>-->
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="https://www.ecan.govt.nz/">Environment Canterbury</a></li>
+      <!-- <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> -->
+    </ul>
+  </div>
+</nav>
+<div id="myNav" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
+</div>
+<div class="container fill"">
+	  <!-- <h3>Right Aligned Navbar</h3>
+	  <p>The .navbar-right class is used to right-align navigation bar buttons.</p>
+	  <div class="row"> -->
+	<div class="row">
+	<div id="viewDiv">viewDiv</div>
+	<div class="toc">
+		<!--
+		<p style="font-size: 15px;">Legend</p>
+		<div id="Legend_div">Interim Soil Layer</div>
+		&nbsp
+		-->
+		<p>Clicking on an area of the map where there are soil data (<img src="brown_hex.jpg" height="15px" width="15px">) will retrieve soil information.</p>
+		<p>Soil map for the parts of Canterbury that do not have S‑map data and are not part of the Department of Conservation estate.</p>
+		<p>The map improves on the the Land Resource Inventory (LRI) information by altering the polygon linework to better match the landscape. The soil labels have been corrected and matched to a representative S‑map sibling.</p>
+		<p>Clicking on an area of the map where there are soil data will retrieve selected soil information about that area, displaying the resultant information in a table in the top-right corner of the map.</p>
+		<p>The About and Provenance sections contain information regarding the background and methods used to create the data.</p>
+		<p>If you were looking for New Zealand's new soils database, "S‑map", it can be accessed through <a href="http://smap.landcareresearch.co.nz/home">S-map Online</a>. When completed, S‑map will provide a seamless digital soil map coverage for New Zealand.</p>
+	</div>
+	</div>
+</div>
+<script>
+function openNav() {
+    document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+    document.getElementById("myNav").style.width = "0%";
+}
+</script>
+
+</body>
+</html>
